@@ -1,79 +1,56 @@
-//引入react核心库
-import React, { Component } from 'react';
-import './App.css'
-import Add from './components/Add'
-import Footer from './components/Footer'
-import List from './components/List'
-import {nanoid} from 'nanoid'
+import React, { Component } from 'react'
+// 引入About路由组件
+import About from './pages/About'
+// 引入Home路由组件
+import Home from './pages/Home'
+// 引入Demo路由组件
+import Demo from './pages/Demo'
+// NavLink->路由高亮样式 Switch->多个路由提高匹配效率 Route->路由组件 Redirect->路由重定向
+import {NavLink,Route,Switch,Redirect} from 'react-router-dom'
+import Config from './config/route'
 
 export default class App extends Component {
-
-	state = {
-		todos: [
-			{ id: '001', title: '吃饭', completed: false },
-			{ id: '002', title: '睡觉', completed: false },
-			{ id: '003', title: '抽烟', completed: true },
-			{ id: '004', title: '喝酒', completed: false },
-			{ id: '005', title: '烫头', completed: false },
-		]
-	}
-
-	// 添加todo
-	addTodo = (title) => {
-		// 准备一个todo对象
-		const todo = {id:nanoid(),title,completed:false}
-		// 向App的state中往前追加一个todo
-		this.setState({todos:[todo,...this.state.todos]})
-	}
-
-	/**勾选某一个todo
-	 * @author fy
-	 * @param {*} id todo的id
-	 * @param {*} completed 标识todo是否已完成
-	 */
-	checkTodo = (id,completed) => {
-		const todos = this.state.todos.map((todo)=>{
-			if(todo.id === id) return {...todo,completed}
-			return todo
-		})
-		this.setState({todos})
-	}
-
-	// 删除一个todo
-	deleteTodo = (id) => {
-		// 使用findIndex实现--效率高
-		const index = this.state.todos.findIndex((todo)=>{
-			return todo.id === id
-		})
-		const todos = [...this.state.todos]
-		todos.splice(index,1)
-		this.setState({todos})
-	}
-
-	// 全选所有todos
-	checkAll = (checked) => {
-		const todos = this.state.todos.map((todo)=>{
-			return {...todo,completed:checked}
-		})
-		this.setState({todos})
-	}
-
-	// 清除所有已完成
-	clearAllCompleted = () => {
-		const todos = this.state.todos.filter((todo) => {
-			if(!todo.completed) return todo
-		})
-		this.setState({todos})
-	}
-
 	render() {
-		const {todos} = this.state
 		return (
-			<div className="todo-container">
-				<div className="todo-wrap">
-					<Add addTodo={this.addTodo} />
-					<List todos={todos} checkTodo={this.checkTodo} deleteTodo={this.deleteTodo}/>
-					<Footer todos={todos} checkAll={this.checkAll} clearAllCompleted={this.clearAllCompleted}/>
+			<div>
+				<div className="row">
+					<div className="col-xs-offset-2 col-xs-8">
+						<div className="page-header">
+							<h2>React Router Demo</h2>
+						</div>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-xs-2 col-xs-offset-2">
+						<div className="list-group">
+							{/*<a className="list-group-item active" href="./about.html">About</a>
+							<a className="list-group-item" href="./home.html">Home</a>*/}
+
+							{/* react中的写法 */}
+							<NavLink className="list-group-item" to="/about">About</NavLink>
+							<NavLink className="list-group-item" to="/home">Home</NavLink>
+						</div>
+					</div>
+					<div className="col-xs-6">
+						<div className="panel">
+							<div className="panel-body">
+								{/* 注册路由 */}
+								<Switch>
+									{/* exact:Boolean 精准匹配 */}
+									<Route path="/about" exact component={About} />
+									<Route path="/about/demo" component={Demo} />
+									<Route path="/home" component={Home} />
+									{
+										/* Config.map((route)=>{
+											return <Route path={route.path} component={route.component} />
+										}) */
+									}
+									{/* 路由重定向 */}
+									<Redirect to="/about"/>
+								</Switch>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		)
