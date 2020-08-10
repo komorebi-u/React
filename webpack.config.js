@@ -34,8 +34,10 @@ module.exports = {
 							'@babel/preset-react' //jsx===>js
 						],
 						plugins:[
+							// 类的装饰器
+							['@babel/plugin-proposal-decorators',{legacy: true}],
 							//让babel认识类中的新写法
-							'@babel/plugin-proposal-class-properties' 
+							'@babel/plugin-proposal-class-properties'
 						]
 					}
 				}
